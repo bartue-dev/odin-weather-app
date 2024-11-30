@@ -1,3 +1,3 @@
-import { greeting } from './test';
+import { getWeatherForecast } from "./weatherData";
 
-console.log(greeting);
+getWeatherForecast('Polomolok')
