@@ -6,11 +6,18 @@
   padding: 30px 30px;
 
   width: 650px;
-  position: relative;
+}
+
+.weather-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .weather-item .input-container {
   height: 55px;
+  width: 100%;
 }
 
 .weather-item .input-container input {
@@ -58,15 +65,12 @@
   text-align: center;
 }
 
-.left-container .separator {
-  position: absolute;
-  top: 65%;
-  left: 110px;
-  margin: auto;
+.left-container .weather-item .separator {
   width: 50%;
   height: 5px;
   border-radius: 10px;
   background-color: lightgray;
+  margin-top: 15px;
 }
 
 
