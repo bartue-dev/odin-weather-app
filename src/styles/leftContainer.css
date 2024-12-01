@@ -1,0 +1,6 @@
+.left-container {
+
+  display: grid;
+  grid-template-row: 1fr 1fr
+ 
+}
