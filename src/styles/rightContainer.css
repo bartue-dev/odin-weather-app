@@ -11,28 +11,52 @@
   grid-template-columns: repeat(3, 1fr);
   column-gap: 50px;
 
-  margin-top: 30px;
+  margin-top: 20px;
 }
 
 .current-condition-container .conditions {
-  background-color: lightgreen;
+  background-color: #748cf1;
+  color: white;
 
   border-radius: 10px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: 5px;
+  align-items: start;
+  padding: 15px;
 
   height: 130px;
 
 }
 
 .current-condition-container .conditions .title {
-  font-size: 1.8rem;
+  font-size: 1.2rem;
+  font-weight: 400;
 }
 
-.current-condition-container .conditions .result,
-.current-condition-container .conditions .sun-result-container {
-  font-size: 1.1rem;
+.current-condition-container .conditions .result{
+  font-size: 1.5rem;
   margin-top: 10px;
+}  
+
+.current-condition-container .conditions .sun-result-container {
+  font-size: 1.5rem;
+}
+
+.right-container .current-day-buttons {
+  height: 50px;
+}
+
+.right-container .current-day-buttons > button {
+  font-size: 1.3rem;
+  border: transparent;
+  outline: none;;
+  margin-right: 20px;
+  cursor: pointer;
+  background-color: transparent;
+
+  height: 40px;
+}
+
+.right-container .current-day-buttons > button:hover {
+  border-bottom: 2px solid #748cf1;
 }
