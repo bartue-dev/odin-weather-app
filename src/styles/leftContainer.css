@@ -9,6 +9,7 @@
 }
 
 .weather-item {
+  width: 400px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -71,6 +72,7 @@
   border-radius: 10px;
   background-color: lightgray;
   margin-top: 15px;
+  display: none;
 }
 
 
