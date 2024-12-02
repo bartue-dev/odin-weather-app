@@ -1,3 +1,5 @@
+import { weatherForecast } from "./weatherForecast";
+
 export async function getWeatherForecast(location, inputEl) {
   const apiKey = 'EJYZJRLG2GL78ULSUWH2K4M8T';
   let url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}?key=${apiKey}`
@@ -14,6 +16,7 @@ export async function getWeatherForecast(location, inputEl) {
 
     let data = await response.json();
 
+    weatherForecast.renderCurrentCondition(data)
     console.log(data)
   } catch (error) {
     console.log(error.message);
