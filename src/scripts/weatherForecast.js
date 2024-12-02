@@ -8,40 +8,136 @@ import rainIcon from '../../assets/icons/rain.png';
 import snowIcon from '../../assets/icons/snow.png';
 import windIcon from '../../assets/icons/wind.png';
 import { getWeatherForecast } from './weatherData';
+import { format, parse } from 'date-fns';
 
 
 export const weatherForecast = (() => {
 
   const searchInputEl = document.querySelector('#search');
-  const weatherIconEl = document.querySelector('.weather-icon');
+  const iconEl = document.querySelector('.icon-img-element');
   const weatherTempEl = document.querySelector('.weather-temp');
   const weatherConditionEl = document.querySelector('.weather-condition');
   const dateEl = document.querySelector('.date');
   const timeEl = document.querySelector('.time');
   const addressEl = document.querySelector('.address');
+  const separator = document.querySelector('.separator')
 
-  searchInputEl.addEventListener('input', () => {
-    if (searchInputEl.validationMessage) {
-      console.log('setCustomValidity exist!')
-      searchInputEl.setCustomValidity('');
-      searchInputEl.value = ''; 
-      return;
-    }
-  });
-
+  
   function searchLocation() {
     searchInputEl.addEventListener('keydown', (event)=> {
       let inputValue = searchInputEl.value;
       if (event.key === 'Enter') {
         getWeatherForecast(inputValue, searchInputEl);
-        console.log(inputValue)
+        searchInputEl.blur();
+      }
+    });
+
+    searchInputEl.addEventListener('click', () => {
+      searchInputEl.value = ''
+    });
+
+    searchInputEl.addEventListener('input', () => {
+      if (searchInputEl.validationMessage) {
+        console.log('setCustomValidity exist!')
+        searchInputEl.setCustomValidity('');
+        searchInputEl.value = ''; 
+        return;
       }
     });
   }
+
+  function renderCurrentCondition(data) {
+    let dataDays = data.days
+
+    let date = new Date();
+    let currentDate = date.toJSON().slice(0,10)
+    let currentTime = data.currentConditions.datetime;
+    let formattedCurrDate = format(currentDate, 'yyyy-MMMM-dd')
+    
+    console.log(currentTime);
+
+    const currentDateIndex = dataDays.findIndex(day => {
+      if (day.datetime === currentDate) {
+        return true;
+      }
+    });
+
+    const hourDataIndex = dataDays[currentDateIndex].hours.findIndex(hour => {
+      if (hour.datetime.split(':')[0] === currentTime.split(':')[0]) {
+        return true;
+      }
+    });
+
+    let currentDateData = dataDays[currentDateIndex].hours[hourDataIndex];
+    let weatherTemp = Math.floor((currentDateData.temp - 32) * 5/9);
+    let weatherCondition = currentDateData.conditions
+    
+    weatherTempEl.textContent = `${weatherTemp} °C`;
+    weatherConditionEl.textContent = toCapitalize(weatherCondition)
+    dateEl.textContent = formattedCurrDate;
+    timeEl.textContent = format(parse(currentTime, 'HH:mm:ss', new Date()), 'h:mm a')
+    addressEl.textContent = data.resolvedAddress;
+
+    setIcon(currentDateData);
+
+    if (weatherTempEl.textContent !== '') {
+      separator.style.display = 'block'
+    }
+
+    console.log(currentDateData)
+
+  }
+
+  function setIcon(currentDateData) {
+
+    switch(currentDateData.icon) {
+      case 'snow':
+        iconEl.src = snowIcon;
+        break;
+      case 'rain':
+        iconEl.src = rainIcon
+        break;
+      case 'fog':
+        iconEl.src = fogIcon
+        break;
+      case 'wind':
+        iconEl.src = windIcon
+        break;
+      case 'cloudy':
+        iconEl.src = cloudyIcon
+        break;
+      case 'partly-cloudy-day':
+        iconEl.src = cloudyDayIcon
+        break;
+      case 'partly-cloudy-night':
+        iconEl.src = cloudyNightIcon
+        break;
+      case 'clear-day':
+        iconEl.src = clearDayIcon
+        break;
+      case 'clear-night':
+        iconEl.src = clearNightIcon
+        break;
+    }
+
+  }
+
+  function toCapitalize(string) {
+    let strArr = string.split(' ');
+
+    const res = strArr.map(str => {
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    });
+
+    return res.join(' ');
+  }
+
+
   
 
   return {
-    searchLocation
+    searchLocation,
+    renderCurrentCondition
   }
 
 })();
