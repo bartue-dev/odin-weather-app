@@ -38,7 +38,6 @@ export const weatherForecast = (() => {
 
     searchInputEl.addEventListener('input', () => {
       if (searchInputEl.validationMessage) {
-        console.log('setCustomValidity exist!')
         searchInputEl.setCustomValidity('');
         searchInputEl.value = ''; 
         return;
@@ -54,8 +53,6 @@ export const weatherForecast = (() => {
     let currentTime = data.currentConditions.datetime;
     let formattedCurrDate = format(currentDate, 'yyyy-MMMM-dd')
     
-    console.log(currentTime);
-
     const currentDateIndex = dataDays.findIndex(day => {
       if (day.datetime === currentDate) {
         return true;
@@ -68,9 +65,9 @@ export const weatherForecast = (() => {
       }
     });
 
-    let currentDateData = dataDays[currentDateIndex].hours[hourDataIndex];
-    let weatherTemp = Math.floor((currentDateData.temp - 32) * 5/9);
-    let weatherCondition = currentDateData.conditions
+    let currentData = dataDays[currentDateIndex].hours[hourDataIndex];
+    let weatherTemp = Math.floor(currentData.temp);
+    let weatherCondition = currentData.conditions
     
     weatherTempEl.textContent = `${weatherTemp} °C`;
     weatherConditionEl.textContent = toCapitalize(weatherCondition)
@@ -78,13 +75,12 @@ export const weatherForecast = (() => {
     timeEl.textContent = format(parse(currentTime, 'HH:mm:ss', new Date()), 'h:mm a')
     addressEl.textContent = data.resolvedAddress;
 
-    setIcon(currentDateData);
+    setIcon(currentData);
 
     if (weatherTempEl.textContent !== '') {
       separator.style.display = 'block'
     }
 
-    console.log(currentDateData)
 
   }
 
