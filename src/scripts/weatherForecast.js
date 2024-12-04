@@ -1,139 +1,95 @@
-import clearDayIcon from '../../assets/icons/clear-day.png';
-import clearNightIcon from '../../assets/icons/clear-night.png';
-import cloudyIcon from '../../assets/icons/cloudy.png';
-import fogIcon from '../../assets/icons/fog.png';
-import cloudyDayIcon from '../../assets/icons/partly-cloudy-day.png';
-import cloudyNightIcon from '../../assets/icons/partly-cloudy-night.png';
-import rainIcon from '../../assets/icons/rain.png';
-import snowIcon from '../../assets/icons/snow.png';
-import windIcon from '../../assets/icons/wind.png';
 import { getWeatherForecast } from './weatherData';
-import { format, parse } from 'date-fns';
-
+import { format, longFormatters } from 'date-fns';
+import { helper } from './helper';
 
 export const weatherForecast = (() => {
-
   const searchInputEl = document.querySelector('#search');
-  const iconEl = document.querySelector('.icon-img-element');
   const weatherTempEl = document.querySelector('.weather-temp');
   const weatherConditionEl = document.querySelector('.weather-condition');
   const dateEl = document.querySelector('.date');
   const timeEl = document.querySelector('.time');
   const addressEl = document.querySelector('.address');
-  const separator = document.querySelector('.separator')
+  const separator = document.querySelector('.separator');
+  const todayBtn = document.querySelector('.today');
+  const tomorrowBtn = document.querySelector('.tomorrow');
 
-  
   function searchLocation() {
-    searchInputEl.addEventListener('keydown', (event)=> {
+
+    searchInputEl.addEventListener('keydown', (event) => {
       let inputValue = searchInputEl.value;
       if (event.key === 'Enter') {
+
+        todayBtn.style.borderBottom = '2px solid #748cf1';
+        tomorrowBtn.style.borderBottom = 'transparent';
+        
         getWeatherForecast(inputValue, searchInputEl);
         searchInputEl.blur();
       }
     });
 
-    searchInputEl.addEventListener('click', () => {
-      searchInputEl.value = ''
-    });
-
     searchInputEl.addEventListener('input', () => {
       if (searchInputEl.validationMessage) {
         searchInputEl.setCustomValidity('');
-        searchInputEl.value = ''; 
+        searchInputEl.value = '';
         return;
       }
     });
   }
 
   function renderCurrentCondition(data) {
-    let dataDays = data.days
+    let dataDays = data.days;
 
     let date = new Date();
-    let currentDate = date.toJSON().slice(0,10)
+    let currentDate = date.toJSON().slice(0, 10);
     let currentTime = data.currentConditions.datetime;
-    let formattedCurrDate = format(currentDate, 'yyyy-MMMM-dd')
-    
-    const currentDateIndex = dataDays.findIndex(day => {
+    let formattedCurrDate = format(currentDate, 'yyyy-MMMM-dd');
+
+    const currentDateIndex = dataDays.findIndex((day) => {
       if (day.datetime === currentDate) {
         return true;
       }
     });
 
-    const hourDataIndex = dataDays[currentDateIndex].hours.findIndex(hour => {
+    const hourDataIndex = dataDays[currentDateIndex].hours.findIndex((hour) => {
       if (hour.datetime.split(':')[0] === currentTime.split(':')[0]) {
         return true;
       }
     });
 
-    let currentData = dataDays[currentDateIndex].hours[hourDataIndex];
-    let weatherTemp = Math.floor(currentData.temp);
-    let weatherCondition = currentData.conditions
-    
+    const hoursData = dataDays[currentDateIndex].hours[hourDataIndex];
+
+    if (!hoursData) {
+      const dateData = dataDays[currentDateIndex];
+      
+      displayData(data, dateData, formattedCurrDate, currentTime);
+      console.log('Displays current date data due to unavailability of hours data');
+      
+    }
+
+    //display hours data
+    displayData(data, hoursData, formattedCurrDate, currentTime)
+
+  }
+
+  function displayData(data, secondData, date, time) {
+    let weatherTemp = Math.floor(secondData.temp);
+    let weatherCondition = secondData.conditions;
+
     weatherTempEl.textContent = `${weatherTemp} °C`;
-    weatherConditionEl.textContent = toCapitalize(weatherCondition)
-    dateEl.textContent = formattedCurrDate;
-    timeEl.textContent = format(parse(currentTime, 'HH:mm:ss', new Date()), 'h:mm a')
+    weatherConditionEl.textContent = helper.toCapitalize(weatherCondition);
+    dateEl.textContent = date;
+    timeEl.textContent = helper.timeFormat12(time);
     addressEl.textContent = data.resolvedAddress;
 
-    setIcon(currentData);
+    helper.setIcon(secondData);
 
     if (weatherTempEl.textContent !== '') {
-      separator.style.display = 'block'
+      separator.style.display = 'block';
     }
-
-
   }
-
-  function setIcon(currentDateData) {
-
-    switch(currentDateData.icon) {
-      case 'snow':
-        iconEl.src = snowIcon;
-        break;
-      case 'rain':
-        iconEl.src = rainIcon
-        break;
-      case 'fog':
-        iconEl.src = fogIcon
-        break;
-      case 'wind':
-        iconEl.src = windIcon
-        break;
-      case 'cloudy':
-        iconEl.src = cloudyIcon
-        break;
-      case 'partly-cloudy-day':
-        iconEl.src = cloudyDayIcon
-        break;
-      case 'partly-cloudy-night':
-        iconEl.src = cloudyNightIcon
-        break;
-      case 'clear-day':
-        iconEl.src = clearDayIcon
-        break;
-      case 'clear-night':
-        iconEl.src = clearNightIcon
-        break;
-    }
-
-  }
-
-  function toCapitalize(string) {
-    let strArr = string.split(' ');
-
-    const res = strArr.map(str => {
-      return str.charAt(0).toUpperCase() + str.slice(1);
-    });
-
-    return res.join(' ');
-  }
-
-
-  
 
   return {
     searchLocation,
-    renderCurrentCondition
-  }
-
+    renderCurrentCondition,
+  };
 })();
