@@ -25,7 +25,6 @@
   padding: 15px;
 
   height: 130px;
-
 }
 
 .current-condition-container .conditions .title {
@@ -33,10 +32,10 @@
   font-weight: 400;
 }
 
-.current-condition-container .conditions .result{
+.current-condition-container .conditions .result {
   font-size: 1.5rem;
   margin-top: 10px;
-}  
+}
 
 .current-condition-container .conditions .sun-result-container {
   font-size: 1.5rem;
@@ -49,7 +48,7 @@
 .right-container .current-day-buttons > button {
   font-size: 1.3rem;
   border: transparent;
-  outline: none;;
+  outline: none;
   margin-right: 20px;
   cursor: pointer;
   background-color: transparent;
