@@ -1,6 +1,6 @@
 .left-container {
   display: grid;
-  grid-template-rows: auto 1fr ;
+  grid-template-rows: auto 1fr;
   gap: 20px;
   justify-content: center;
   padding: 30px 30px;
@@ -74,7 +74,3 @@
   margin-top: 15px;
   display: none;
 }
-
-
-
-
