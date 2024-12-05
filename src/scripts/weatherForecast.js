@@ -89,7 +89,7 @@ export const weatherForecast = (() => {
   }
 
   return {
-    searchLocation,
+    searchLocation: searchLocation(),
     renderCurrentCondition,
   };
 })();
