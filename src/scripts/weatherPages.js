@@ -23,6 +23,7 @@ export const weatherPages = (() => {
   const searchInputEl = document.querySelector('#search');
   const todayBtn = document.querySelector('.today');
   const tomorrowBtn = document.querySelector('.tomorrow');
+  const loader = document.querySelector('.loader');
 
   todayBtn.addEventListener('click', (event) => {
     event.preventDefault();
@@ -45,6 +46,7 @@ export const weatherPages = (() => {
     tomorrowBtn.style.borderBottom = '2px solid #748cf1';
     
     let inputValue = searchInputEl.value;
+
     if (inputValue === '') {
 
       alert('search for a city or country');
@@ -56,6 +58,9 @@ export const weatherPages = (() => {
       let url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${inputValue}?key=${apiKey}&${unitGroup}`;
 
       try {
+
+        loader.style.display = 'block'
+
         const response = await fetch(url);
 
         if (!response.ok) {
@@ -68,6 +73,8 @@ export const weatherPages = (() => {
         renderTomWeather(data);
       } catch (error) {
         console.log('Fetch error: ', error);
+      } finally {
+        loader.style.display = 'none';
       }
     }
   });
