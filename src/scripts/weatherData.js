@@ -1,12 +1,17 @@
 import { weatherForecast } from './weatherForecast';
 import { weatherInfo } from './weatherInfo';
 
+const loader = document.querySelector('.loader');
+
 export async function getWeatherForecast(location, inputEl) {
   const unitGroup = 'unitGroup=metric';
   const apiKey = 'EJYZJRLG2GL78ULSUWH2K4M8T';
   let url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}?key=${apiKey}&${unitGroup}`;
 
   try {
+
+    loader.style.display = 'block';
+
     const response = await fetch(url);
 
     if (!response.ok) {
@@ -23,6 +28,8 @@ export async function getWeatherForecast(location, inputEl) {
     return data;
   } catch (error) {
     console.log('Fetch error: ', error);
+  } finally {
+    loader.style.display = 'none';
   }
 }
 
